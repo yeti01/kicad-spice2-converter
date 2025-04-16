@@ -65,24 +65,10 @@
 
     <!-- (4) PRINT Parameters -->
     <xsl:choose>
-      <!-- Transmission Line -->
-      <xsl:when test="starts-with($ref, 'T')">
-        <xsl:variable name="Z0" select="substring-before(substring-after($simparams, 'Z0='), '&quot;')"/>
-        <xsl:variable name="TD" select="substring-before(substring-after($simparams, 'Td='), ' ')"/>
-        <xsl:value-of select="translate(translate($Z0, ',', '.'), $lowercase, $uppercase)"/>
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TD, ',', '.'), $lowercase, $uppercase)"/>
-      </xsl:when>
-
-      <!-- TODO Controlled Source -->
-      <xsl:when test="
-           starts-with($ref, 'G')
-        or starts-with($ref, 'E')
-        or starts-with($ref, 'F')
-        or starts-with($ref, 'H')">
-        <xsl:variable name="model"
-          select="substring-before(substring-after($simparams, 'model=&quot;'), '&quot;')"/>
-        <xsl:text> </xsl:text><xsl:value-of select="$model"/>
+      <!-- Generic SPICE models-->
+      <xsl:when test="$simdevice='SPICE'">
+        <xsl:variable name="model" select="substring-before(substring-after($simparams, 'model=&quot;'), '&quot;')"/>
+        <xsl:value-of select="translate(translate($model, ',', '.'), $lowercase, $uppercase)"/>
       </xsl:when>
 
       <!-- Source with PULSE waveform -->
@@ -135,12 +121,6 @@
       <!-- TODO Source with PWL waveform -->
       <xsl:when test="$simtype='PWL'">
         <xsl:text>PWL(</xsl:text>
-        <xsl:text>)</xsl:text>
-      </xsl:when>
-
-      <!-- TODO Source with SFFM waveform -->
-      <xsl:when test="$simtype='SFFM'">
-        <xsl:text>SFFM(</xsl:text>
         <xsl:text>)</xsl:text>
       </xsl:when>
     </xsl:choose>
