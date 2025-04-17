@@ -112,15 +112,35 @@
         <xsl:text>)</xsl:text>
       </xsl:when>
 
-      <!-- TODO Source with EXP waveform -->
+      <!-- Source with EXP waveform -->
       <xsl:when test="$simtype='EXP'">
+        <xsl:variable name="V1" select="substring-before(substring-after($simparams, 'y1='), ' ')"/>
+        <xsl:variable name="V2" select="substring-before(substring-after($simparams, 'y2='), ' ')"/>
+        <xsl:variable name="TD1" select="substring-before(substring-after($simparams, 'td1='), ' ')"/>
+        <xsl:variable name="TAU1" select="substring-before(substring-after($simparams, 'tau1='), ' ')"/>
+        <xsl:variable name="TD2" select="substring-before(substring-after($simparams, 'td2='), ' ')"/>
+        <xsl:variable name="TAU2" select="substring-after($simparams, 'tau2=')"/>
         <xsl:text>EXP(</xsl:text>
+        <xsl:value-of select="field[@name='Sim.Params']"/>
+        <xsl:value-of select="translate(translate($V1, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="translate(translate($V2, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="translate(translate($TD1, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="translate(translate($TAU1, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="translate(translate($TD2, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="translate(translate($TAU2, ',', '.'), $lowercase, $uppercase)"/>
         <xsl:text>)</xsl:text>
       </xsl:when>
 
-      <!-- TODO Source with PWL waveform -->
+      <!-- Source with PWL waveform -->
       <xsl:when test="$simtype='PWL'">
         <xsl:text>PWL(</xsl:text>
+        <xsl:variable name="pwl" select="substring-before(substring-after($simparams, 'pwl=&quot;'), '&quot;')"/>
+        <xsl:value-of select="translate(translate($pwl, ',', '.'), $lowercase, $uppercase)"/>
         <xsl:text>)</xsl:text>
       </xsl:when>
     </xsl:choose>
