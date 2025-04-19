@@ -149,23 +149,38 @@
     <xsl:text>&#10;</xsl:text>
   </xsl:template>
 
-  <!-- TODO FUNCTION Model definitions -->
+  <!-- FUNCTION Model definitions -->
   <xsl:template name="emit-models">
-    <xsl:for-each select="/export/components/comp[
-      property[@name='Sim.Device' and (@value='D' or @value='NPN' or @value='PNP' or @value='NMOS' or @value='PMOS')]
-    ]">
+    <xsl:for-each select="/export/components/comp[property[@name='Sim.Device'
+     and(@value='D'
+      or @value='NPN'
+      or @value='PNP'
+      or @value='NJF'
+      or @value='NJFET'
+      or @value='PJF'
+      or @value='PJFET'
+      or @value='NMOS'
+      or @value='PMOS')]]">
       <xsl:variable name="modelname" select="value"/>
-      <xsl:variable name="modeltype" select="property[@name='Sim.Device']/@value"/>
+      <xsl:variable name="modeldevice" select="property[@name='Sim.Device']/@value"/>
       <xsl:variable name="modelparams" select="property[@name='Sim.Params']/@value"/>
 
       <!-- Avoid duplicate model declarations -->
-      <xsl:if test="not(preceding-sibling::comp[
-        property[@name='Sim.Name']/@value = $modelname
-      ])">
+      <xsl:if test="value[not(. = preceding::value)]">
         <xsl:text>.MODEL </xsl:text>
         <xsl:value-of select="$modelname"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="$modeltype"/>
+        <xsl:choose>
+          <xsl:when test="$modeldevice='NJFET'">
+            <xsl:text>NJF</xsl:text>
+          </xsl:when>
+          <xsl:when test="$modeldevice='PJFET'">
+            <xsl:text>PJF</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$modeldevice"/>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="string-length(normalize-space($modelparams)) &gt; 0">
           <xsl:text> (</xsl:text>
           <xsl:value-of select="$modelparams"/>
