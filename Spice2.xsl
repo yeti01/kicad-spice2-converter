@@ -4,8 +4,8 @@
 
   <xsl:output method="text" encoding="UTF-8"/>
 
-  <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'"/>
-  <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+  <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz,'"/>
+  <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ.'"/>
 
   <!-- MAIN Create Netlist -->
   <xsl:template match="/export">
@@ -59,7 +59,7 @@
         or starts-with($ref, 'M')
         or starts-with($ref, 'X')
         or $simtype='DC'">
-        <xsl:value-of select="translate(translate($value, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($value, $lowercase, $uppercase)"/>
       </xsl:when>
     </xsl:choose>
 
@@ -68,7 +68,7 @@
       <!-- Generic SPICE models-->
       <xsl:when test="$simdevice='SPICE'">
         <xsl:variable name="model" select="substring-before(substring-after($simparams, 'model=&quot;'), '&quot;')"/>
-        <xsl:value-of select="translate(translate($model, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($model, $lowercase, $uppercase)"/>
       </xsl:when>
 
       <!-- Source with PULSE waveform -->
@@ -82,19 +82,19 @@
         <xsl:variable name="PER" select="substring-after($simparams, 'per=')"/>
         <xsl:text>PULSE(</xsl:text>
         <xsl:value-of select="field[@name='Sim.Params']"/>
-        <xsl:value-of select="translate(translate($V1, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($V1, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($V2, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($V2, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TD, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($TD, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TR, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($TR, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TF, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($TF, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TW, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($TW, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($PER, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($PER, $lowercase, $uppercase)"/>
         <xsl:text>)</xsl:text>
       </xsl:when>
 
@@ -104,11 +104,11 @@
         <xsl:variable name="VA" select="substring-before(substring-after($simparams, 'ampl='), ' ')"/>
         <xsl:variable name="FREQ" select="substring-before(substring-after($simparams, 'f='), ' ')"/>
         <xsl:text>SIN(</xsl:text>
-        <xsl:value-of select="translate(translate($VO, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($VO, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($VA, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($VA, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($FREQ, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($FREQ, $lowercase, $uppercase)"/>
         <xsl:text>)</xsl:text>
       </xsl:when>
 
@@ -122,17 +122,17 @@
         <xsl:variable name="TAU2" select="substring-after($simparams, 'tau2=')"/>
         <xsl:text>EXP(</xsl:text>
         <xsl:value-of select="field[@name='Sim.Params']"/>
-        <xsl:value-of select="translate(translate($V1, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($V1, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($V2, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($V2, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TD1, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($TD1, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TAU1, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($TAU1, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TD2, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($TD2, $lowercase, $uppercase)"/>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="translate(translate($TAU2, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($TAU2, $lowercase, $uppercase)"/>
         <xsl:text>)</xsl:text>
       </xsl:when>
 
@@ -140,7 +140,7 @@
       <xsl:when test="$simtype='PWL'">
         <xsl:text>PWL(</xsl:text>
         <xsl:variable name="pwl" select="substring-before(substring-after($simparams, 'pwl=&quot;'), '&quot;')"/>
-        <xsl:value-of select="translate(translate($pwl, ',', '.'), $lowercase, $uppercase)"/>
+        <xsl:value-of select="translate($pwl, $lowercase, $uppercase)"/>
         <xsl:text>)</xsl:text>
       </xsl:when>
     </xsl:choose>
@@ -182,8 +182,8 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="string-length(normalize-space($modelparams)) &gt; 0">
-          <xsl:text> (</xsl:text>
-          <xsl:value-of select="$modelparams"/>
+          <xsl:text>(</xsl:text>
+          <xsl:value-of select="translate($modelparams, $lowercase, $uppercase)"/>
           <xsl:text>)</xsl:text>
         </xsl:if>
         <xsl:text>&#10;</xsl:text>
