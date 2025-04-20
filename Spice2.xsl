@@ -7,7 +7,7 @@
   <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz,'"/>
   <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ.'"/>
 
-  <!-- MAIN Create Netlist -->
+  <!-- MAIN: Create Netlist -->
   <xsl:template match="/export">
     <!-- PRINT Project Name -->
     <xsl:text>* </xsl:text>
@@ -22,7 +22,7 @@
     <xsl:text>.END</xsl:text>
   </xsl:template>
 
-  <!-- LOOP Component handling -->
+  <!-- LOOP: Component handling -->
   <xsl:template match="components/comp">
     <xsl:variable name="ref" select="@ref"/>
     <xsl:variable name="value" select="value"/>
@@ -149,7 +149,7 @@
     <xsl:text>&#10;</xsl:text>
   </xsl:template>
 
-  <!-- FUNCTION Model definitions -->
+  <!-- FUNCTION: Model definitions -->
   <xsl:template name="emit-models">
     <xsl:for-each select="/export/components/comp[property[@name='Sim.Device'
      and(@value='D'
@@ -183,7 +183,9 @@
         </xsl:choose>
         <xsl:if test="string-length(normalize-space($modelparams)) &gt; 0">
           <xsl:text>(</xsl:text>
-          <xsl:value-of select="translate($modelparams, $lowercase, $uppercase)"/>
+          <xsl:call-template name="split-model-parameters">
+            <xsl:with-param name="params" select="translate($modelparams, $lowercase, $uppercase)"/>
+          </xsl:call-template>
           <xsl:text>)</xsl:text>
         </xsl:if>
         <xsl:text>&#10;</xsl:text>
@@ -191,7 +193,27 @@
     </xsl:for-each>
   </xsl:template>
 
-  <!-- FUNCTION Node names for pins -->
+  <!-- FUNCTION: Split model parameters into separate lines -->
+  <xsl:template name="split-model-parameters">
+    <xsl:param name="params"/>
+    <xsl:choose>
+      <!-- If the string contains a space -->
+      <xsl:when test="contains($params, ' ')">
+        <xsl:value-of select="substring-before($params, ' ')"/>
+        <xsl:text>&#10;+ </xsl:text> <!-- newline and plus -->
+        <!-- Recurse with rest of the string -->
+        <xsl:call-template name="split-model-parameters">
+          <xsl:with-param name="params" select="substring-after($params, ' ')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <!-- Last part of the string -->
+      <xsl:otherwise>
+        <xsl:value-of select="$params"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- FUNCTION: Node names for pins -->
   <xsl:template name="pin-nodes">
     <xsl:param name="ref"/>
     <xsl:for-each select="/export/nets/net/node[@ref = $ref]">
@@ -209,7 +231,7 @@
     </xsl:for-each>
   </xsl:template>
 
-  <!-- FUNCTION Ordered node names for pins -->
+  <!-- FUNCTION: Ordered node names for pins -->
   <xsl:template name="ordered-pin-nodes">
     <xsl:param name="ref"/>
     <xsl:variable name="pinspec" select="/export/components/comp[@ref = $ref]/fields/field[@name = 'Sim.Pins']"/>
@@ -219,7 +241,7 @@
     </xsl:call-template>
   </xsl:template>
 
-  <!-- FUNCTION Helper to process pins -->
+  <!-- FUNCTION: Helper to process pins -->
   <xsl:template name="process-pins">
     <xsl:param name="pinspec"/>
     <xsl:param name="ref"/>
