@@ -28,7 +28,7 @@
     <xsl:variable name="value" select="value"/>
     <xsl:variable name="simtype" select="fields/field[@name='Sim.Type']"/>
     <xsl:variable name="simdevice" select="fields/field[@name='Sim.Device']"/>
-    <xsl:variable name="simparams" select="fields/field[@name='Sim.Params']"/>
+    <xsl:variable name="simparams" select="concat(fields/field[@name='Sim.Params'], ' ')"/>
 
     <!-- (1) PRINT Name -->
     <xsl:value-of select="$ref"/>
@@ -79,7 +79,7 @@
         <xsl:variable name="TR" select="substring-before(substring-after($simparams, 'tr='), ' ')"/>
         <xsl:variable name="TF" select="substring-before(substring-after($simparams, 'tf='), ' ')"/>
         <xsl:variable name="TW" select="substring-before(substring-after($simparams, 'tw='), ' ')"/>
-        <xsl:variable name="PER" select="substring-after($simparams, 'per=')"/>
+        <xsl:variable name="PER" select="substring-before(substring-after($simparams, 'per='), ' ')"/>
         <xsl:text>PULSE(</xsl:text>
         <xsl:value-of select="field[@name='Sim.Params']"/>
         <xsl:value-of select="translate($V1, $lowercase, $uppercase)"/>
@@ -119,7 +119,7 @@
         <xsl:variable name="TD1" select="substring-before(substring-after($simparams, 'td1='), ' ')"/>
         <xsl:variable name="TAU1" select="substring-before(substring-after($simparams, 'tau1='), ' ')"/>
         <xsl:variable name="TD2" select="substring-before(substring-after($simparams, 'td2='), ' ')"/>
-        <xsl:variable name="TAU2" select="substring-after($simparams, 'tau2=')"/>
+        <xsl:variable name="TAU2" select="substring-before(substring-after($simparams, 'tau2='), ' ')"/>
         <xsl:text>EXP(</xsl:text>
         <xsl:value-of select="field[@name='Sim.Params']"/>
         <xsl:value-of select="translate($V1, $lowercase, $uppercase)"/>
