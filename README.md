@@ -35,7 +35,7 @@ Now you have a new Tabpage `Spice2` from which you can export netlists.
     R2 7 5 3.9K
     R3 6 0 1K
     R4 4 0 24K
-    R5 3 0 1M
+    R5 3 0 1MEG
     V1 2 0 SIN(0 1 1K)
     V2 7 0 12.2
     .END

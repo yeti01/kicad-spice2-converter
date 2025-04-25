@@ -52,8 +52,18 @@
       <xsl:when test="
            starts-with($ref, 'R')
         or starts-with($ref, 'C')
-        or starts-with($ref, 'L')
-        or starts-with($ref, 'D')
+        or starts-with($ref, 'L')">
+        <xsl:choose>
+          <xsl:when test="substring($value, string-length($value), 1) = 'M'">
+            <xsl:value-of select="translate(concat($value, 'EG'), $lowercase, $uppercase)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="translate($value, $lowercase, $uppercase)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:when test="
+           starts-with($ref, 'D')
         or starts-with($ref, 'Q')
         or starts-with($ref, 'J')
         or starts-with($ref, 'M')
